@@ -1,0 +1,38 @@
+1 下载并转换模型
+
+你可以使用 --all-in-one 命令来下载模型、转换为 ggml 格式并进行优化。将 /path/to/models 替换为你实际下载模型的路径。
+
+docker run -v /path/to/models:/models ghcr.io/ggml-org/llama.cpp:full --all-in-one "/models/" 7B
+
+
+2 使用转换后的模型进行推理
+
+模型转换完成后，你可以使用下面的命令来运行模型进行推理：
+
+docker run -v /path/to/models:/models ghcr.io/ggml-org/llama.cpp:full --run -m /models/7B/ggml-model-q4_0.gguf -p "Building a website can be done in 10 simple steps:" -n 512
+
+
+3 使用轻量版镜像
+
+如果你希望使用更小的镜像，可以选择轻量版镜像：
+
+docker run -v /path/to/models:/models ghcr.io/ggml-org/llama.cpp:light -m /models/7B/ggml-model-q4_0.gguf -p "Building a website can be done in 10 simple steps:" -n 512
+
+
+4 使用服务器镜像
+
+如果你想将模型部署为服务器，可以使用服务器版镜像：
+
+docker run -v /path/to/models:/models -p 8000:8000 ghcr.io/ggml-org/llama.cpp:server -m /models/7B/ggml-model-q4_0.gguf --port 8000 --host 0.0.0.0 -n 512
+
+-v /path/to/models:/models：将本地模型路径映射到容器内的 /models 目录。
+
+-m /models/7B/ggml-model-q4_0.gguf：指定要使用的模型文件。
+
+-p：指定要提供给模型的输入文本。
+
+-n 512：指定生成的输出字符数。
+
+EXAMPLE
+
+docker run --name llama-server-gemma-3-4b -v /home/nick/models:/models -p 11001:11001 ghcr.io/ggml-org/llama.cpp:server -m /models/gemma-3-4b-it-q4_0.gguf --port 11001 --host 0.0.0.0 -n 512

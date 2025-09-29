@@ -1,0 +1,49 @@
+# Ollama 常用命令
+
+1. **查看当前安装的模型**
+
+查看本地已安装的模型列表：
+ollama models
+
+查看模型的详细信息 查看特定模型的详细信息：
+ollama inspect <model_name>
+
+拉取最新模型 从 Ollama 拉取最新的模型：
+ollama pull <model_name>
+
+运行模型 使用指定的模型进行推理：
+ollama run <model_name> --input "<input_text>"
+
+列出已安装的模型 查看本地已安装的模型及其版本：
+ollama list
+
+删除模型 删除本地的指定模型：
+ollama delete <model_name>
+
+升级 Ollama 升级 Ollama 到最新版本：
+ollama upgrade
+
+查看 Ollama 版本 查看当前安装的 Ollama 版本：
+ollama --version
+
+配置 Ollama 资源 修改 Ollama 配置文件来调整系统资源，例如 CPU 和内存等：
+ollama config --cpus <cpu_count> --memory <memory_size>
+
+运行 Ollama 容器 在 Docker 中运行 Ollama 容器：
+docker run --gpus all --name ollama -p 5005:5005 ollama/ollama:latest
+
+查看模型资源使用情况 查看模型运行时的资源使用情况（例如 CPU 和内存）：
+ollama stats
+
+设置模型参数 设置模型的各种运行参数（例如温度、最大长度等）：
+ollama run <model_name> --temperature <value> --max-length <value>
+
+调试模型运行 启动模型调试模式，查看模型运行时的详细日志：
+ollama debug
+
+查看 Ollama 容器的状态 查看 Ollama Docker 容器的状态：
+docker ps | grep ollama
+
+清理未使用的模型和容器 清理系统中不再使用的模型和容器：
+docker system prune -a
+

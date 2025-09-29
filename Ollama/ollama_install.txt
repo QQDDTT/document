@@ -1,0 +1,19 @@
+官方推荐的安装方式
+
+下载并安装 Ollama
+
+curl -fsSL https://ollama.com/install.sh | sh
+
+验证安装
+
+ollama --version
+
+启动 Ollama
+
+ollama serve
+
+
+卸载 Ollama
+
+sudo rm -rf /usr/bin/ollama /var/lib/ollama
+

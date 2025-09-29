@@ -1,0 +1,101 @@
+第一步：环境准备
+
+    安装 Ollama：
+		brew install ollama    # Mac
+		sudo apt install ollama #ubuntu
+
+	确认安装了必要的开发工具：
+		Python 3.10+
+		transformers（Huggingface）
+		datasets（Huggingface）
+		peft（用于 LoRA 微调）
+		bitsandbytes（量化训练，加速微调）
+		torch（PyTorch）
+	可以用 pip 一次性安装：
+		pip install torch transformers datasets peft bitsandbytes
+
+第二步：准备训练数据
+
+	Ollama 微调一般需要结构化数据，比如：
+	JSON 格式：
+		[
+			{
+				"input": "什么是机器学习？",
+				"output": "机器学习是人工智能的一个分支，它使计算机能够从数据中学习。"
+			},
+			{
+				"input": "解释监督学习和无监督学习的区别。",
+				"output": "监督学习使用有标签的数据训练模型，无监督学习使用无标签的数据。"
+			}
+		]
+
+	数据集要求：
+
+		输入（input） 是给模型的提示。
+		输出（output） 是你希望模型返回的回答。
+
+	文件保存为，比如：finetune_dataset.json
+
+第三步：加载基础模型
+
+	假设你用 Llama 2 7B Chat，用 transformers 代码加载：
+		from transformers import AutoModelForCausalLM, AutoTokenizer
+		model_name = "meta-llama/Llama-2-7b-chat-hf"
+		tokenizer = AutoTokenizer.from_pretrained(model_name)
+		model = AutoModelForCausalLM.from_pretrained(
+			model_name,
+			load_in_8bit=True,   # 用 8-bit 量化，省显存
+			device_map="auto"
+		)
+
+第四步：应用 LoRA 微调设置
+
+	用 peft 快速设置 LoRA 参数：
+		from peft import get_peft_model, LoraConfig, TaskType
+		lora_config = LoraConfig(
+			task_type=TaskType.CAUSAL_LM,    # 因果语言建模
+			inference_mode=False,            # 训练模式
+			r=8,                              # LoRA 秩
+			lora_alpha=32,
+			lora_dropout=0.05
+		)
+		model = get_peft_model(model, lora_config)
+
+第五步：构建训练器（Trainer）
+	from transformers import Trainer, TrainingArguments, DataCollatorForLanguageModeling
+	from datasets import load_dataset
+
+	# 加载数据
+	dataset = load_dataset('json', data_files='finetune_dataset.json')
+
+	# 设置训练参数
+	training_args = TrainingArguments(
+		output_dir="./lora-llama2",
+		per_device_train_batch_size=4,
+		gradient_accumulation_steps=8,
+		evaluation_strategy="steps",
+		num_train_epochs=3,
+		save_steps=10,
+		logging_steps=10,
+		learning_rate=2e-4,
+		fp16=True,
+		push_to_hub=False,
+		report_to="tensorboard",   # 你可以用 tensorboard 查看训练过程
+	)
+
+	# 训练器
+	trainer = Trainer(
+		model=model,
+		args=training_args,
+		train_dataset=dataset["train"],
+		data_collator=DataCollatorForLanguageModeling(tokenizer, mlm=False),
+	)
+
+	trainer.train()
+
+第六步：保存和使用微调结果
+
+	训练完成后，保存你的 LoRA adapter：
+		model.save_pretrained("./lora-llama2-adapter")
+
+之后在 Ollama 使用时，可以指定加载这个微调的 adapter（未来 Ollama 会支持直接加载 LoRA）。

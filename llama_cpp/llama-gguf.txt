@@ -1,0 +1,5 @@
+usage: llama-gguf data.gguf r|w [n]
+r: read data.gguf file
+w: write data.gguf file
+n: no check of tensor data
+
