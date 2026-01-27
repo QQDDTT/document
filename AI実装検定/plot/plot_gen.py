@@ -10,4 +10,4 @@ plt.scatter(
     alpha=0.5
 )
 
-plt.savefig('AI実装検定/plot/sin_3.png', dpi=300, bbox_inches='tight')
+plt.savefig('AI実装検定/plot/random_1.png', dpi=300, bbox_inches='tight')
