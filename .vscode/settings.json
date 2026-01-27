@@ -1,0 +1,17 @@
+{
+    "markdown.preferredMdPathExtensionStyle": "auto",
+    // 告诉 VS Code 该文件夹下的 Python 解释器路径
+    "python.defaultInterpreterPath": "${workspaceFolder}/AI実装検定/.venv/bin/python",
+
+    // 自动分析代码时的依赖搜索路径
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/AI実装検定"
+    ],
+
+    // 终端自动激活环境：当你在此文件夹下打开新终端时，自动 source .venv/bin/activate
+    "python.terminal.activateEnvInCurrentTerminal": true,
+
+    // 格式化插件（可选，建议保持 AI 学习代码整洁）
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black"
+}

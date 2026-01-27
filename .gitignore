@@ -10,3 +10,9 @@
 **.pdf
 
 .gitignore
+
+AI実装検定/.venv/
+AI実装検定/plot/plot_gen.py
+
+
+.vscode/

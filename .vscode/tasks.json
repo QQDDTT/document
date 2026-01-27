@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Update AI Plots",
+            "type": "shell",
+            "command": "${workspaceFolder}/AI実装検定/.venv/bin/python",
+            "args": ["${workspaceFolder}/AI実装検定/plot/plot_gen.py"],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            }
+        }
+    ]
+}
